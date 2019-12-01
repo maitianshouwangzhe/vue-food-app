@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-      <!-- 定义插槽占位 -->
+      <!-- 定义插槽占位，用于传递标签数据  -->
     <slot name="left"></slot>
     <span class="header_title">
             <span class="header_title_text ellipsis">{{title}}</span>

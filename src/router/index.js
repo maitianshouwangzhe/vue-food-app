@@ -23,6 +23,7 @@ export default new VueRoute({
         {
             path: '/home',
             component: Home,
+            // 配置仅仅某些路由显示底部的页脚
             meta: {
             showFooter: true
             }
