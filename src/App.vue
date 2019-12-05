@@ -12,7 +12,7 @@
   export default {
 
     mounted(){
-      // 触发action调用
+      // 第一种：触发action调用
       this.$store.dispatch('getAddress')
     },
 
