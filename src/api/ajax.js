@@ -6,11 +6,11 @@ import axios from 'axios'
 
 // 以对象的形式，传过来请求参数
 export default function ajax(url, data={}, type = 'GET') {
-  return new Promise(((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let promise
     if (type === 'GET'){
-      // 准备url 和query参数数据
-      let dataStr = ''     //数据拼接字符串
+      // 准备url 和 query参数数据
+      let dataStr = ''     // 数据拼接字符串
       Object.keys(data).forEach(key => {
         dataStr += key + '=' + data[key] + '&'
       })
@@ -31,7 +31,7 @@ export default function ajax(url, data={}, type = 'GET') {
         // 失败的请求
         reject(error)
       })
-  }))
+  })
 }
 
 

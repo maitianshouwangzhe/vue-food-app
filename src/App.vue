@@ -10,6 +10,12 @@
 <script>
   import Footer from './components/FooterNav/FooterNav'
   export default {
+
+    mounted(){
+      // 触发action调用
+      this.$store.dispatch('getAddress')
+    },
+
     components: {
       Footer,
     }
