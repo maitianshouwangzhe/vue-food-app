@@ -13,12 +13,13 @@
 
         <!--首页导航-->
         <nav class="msite_nav">
-          <div class="swiper-container">
+          <!--  categorys数组中有数组时，才显示。 注： 空数组为false  -->
+          <div class="swiper-container" v-if="categorys.length">
             <div class="swiper-wrapper">
               <div class="swiper-slide" v-for="(categorys, index) in categorysArr" :key="index">    <!--  v-for 在哪一行， 就循环生成该行 -->
                 <a href="javascript:" class="link_to_food" v-for="(item, index) in categorys" :key="index">
                   <div class="food_container">
-                    <!--  第一种方法： 使用data中的数据，拼接字符串 -->
+                    <!--  第一种方法： 使用data中的数据进行拼接字符串 -->
                     <img :src="baseImageUrl + item.image_url">
 
                     <!--  第二种方法： 直接拼接字符串  -->
@@ -31,16 +32,19 @@
             <!-- 添加分页器 -->
             <div class="swiper-pagination"></div>
           </div>
+          <img src="./images/msite_back.svg" alt="" v-else />
         </nav>
 
 
-        <!--首页附近商家列表-->
+        <!--首页附近的商家列表-->
         <div class="msite_shop_list">
           <div class="shop_header">
             <i class="iconfont icon-xuanxiang"></i>
             <span class="shop_header_title">附近商家</span>
           </div>
+
           <ShopList/>
+
         </div>
       </section>
 </template>
@@ -62,24 +66,34 @@
 
     // 由于Swiper之前已经显示了，则在生命周期中创建最好
     mounted(){
-      // 创建一个Swiper实例对象，用于实现轮播
-      new Swiper ('.swiper-container', {
-        direction: 'horizontal', // 水平切换选项
-        loop: true, // 循环模式选项
 
-        // 如果需要分页器
-        pagination: {
-          el: '.swiper-pagination',
-        },
-      })
+
       this.$store.dispatch('getCategorys')
+      this.$store.dispatch('getShops')
+    },
 
+
+    // 轮播图只有在有categorys列表数据之后才能显示，因此只能监视分类列表的变化
+    watch: {
+      // categorys 后面是回调函数
+      categorys (value) {    // categorys数组中有数据了，但是界面显示是异步显示的。 因此，只有在界面更新后，立即创建Swiper实例。使用this.$nextTick
+        this.$nextTick( () => {
+          // 创建一个Swiper实例对象，用于实现轮播
+          new Swiper ('.swiper-container', {
+            direction: 'horizontal', // 水平切换选项
+            loop: true, // 循环模式选项
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+            },
+          })
+        })
+      },
     },
 
     computed: {
       //  读取 最新的状态
       ...mapState(['address', 'categorys']),
-
 
       // 根据请求得到的一维数据categorys, 生成自己所需的二维数组categorysArr。 注,二维数组： [ [],  [], [], [], ... , [] ]
       // 内部小数组中的元素个数最大是8

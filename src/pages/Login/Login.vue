@@ -4,16 +4,24 @@
       <div class="login_header">
         <h2 class="login_logo">外卖App</h2>
         <div class="login_header_title">
-          <a href="javascript:;" class="on">短信登录</a>
-          <a href="javascript:;">密码登录</a>
+          <a href="javascript:;" :class="{on: loginWay}" @click="loginWay=true">短信登录</a>   <!-- 点击时， 将loginWay设置为true   -->
+          <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay=false">密码登录</a>
         </div>
       </div>
       <div class="login_content">
         <form>
-          <div class="on">
+          <div :class="{on: loginWay}">
             <section class="login_message">
-              <input type="tel" maxlength="11" placeholder="手机号">
-              <button disabled="disabled" class="get_verification">获取验证码</button>
+              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
+              <!--  当使用v-model收集的得到的数据满足条件时， 增加了一个right_phone的类名, 且rightPhone与phone有关，则使用计算属性 -->
+              <!--  一旦点击，则会自动提交表单， 需要阻止表单的默认行为@click.prevent   -->
+              <button :disabled="!rightPhone"
+                      class="get_verification"
+                      :class="{right_phone: rightPhone}"
+                      @click.prevent="getCode"
+              >
+                {{countDown > 0 ? `已发送(${countDown}s)` : '点击获取验证码'}}
+              </button>
             </section>
             <section class="login_verification">
               <input type="tel" maxlength="8" placeholder="验证码">
@@ -23,7 +31,7 @@
               <a href="javascript:;">《用户服务协议》</a>
             </section>
           </div>
-          <div>
+          <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
                 <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
@@ -53,7 +61,44 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    data(){
+      return {
+        loginWay: true,
+        // 倒计时
+        countDown: 0,
+        phone: '',
+      }
+    },
+
+    computed: {
+      rightPhone (){
+        // 取出收集得到的值
+        const inputValue = this.phone
+        return /^1\d{10}$/.test(inputValue)
+      },
+    },
+
+    methods: {
+      getCode (){
+        // 如果当前没有倒计时， 才启动倒计时和 发请求 （注： 0对应为false ）。
+        // this.countDown不为0时，即表明： 已经有了倒计时，若存在倒计时，不可再次点击
+        if (!this.countDown){
+          // 启动倒计时
+          this.countDown = 30
+          const interValId = setInterval(()=>{
+            this.countDown--
+            if (this.countDown <=0 ){
+              // 停止计时
+              clearInterval(interValId)
+            }
+          }, 1000)
+        }
+
+
+      },
+    }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -117,6 +162,8 @@
                 color #ccc
                 font-size 14px
                 background transparent
+                &.right_phone   // 定义样式
+                  color black
             .login_verification
               position relative
               margin-top 16px
