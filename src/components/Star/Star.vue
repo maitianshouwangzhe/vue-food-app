@@ -1,7 +1,8 @@
 <template>
   <!--  class="star star-24" 中的star-24为变量，应该写为  -->
-  <div class="star star-24" :class="'star-' + size ">
-    <!--   starClass数组中， 有5个 scItem。 注： 由于starClass数组由score确定生成，则需要计算属性   -->
+  <div class="star" :class="'star-' + size ">
+    <!--   starClass数组中， 有5个 scItem。
+    注： 由于starClass数组[on, half, off, off, off ]由score确定生成，则需要计算属性   -->
     <span class="star-item" v-for="(scItem, index) in starClass" :key="index" :class="scItem"></span>
 
     <!--

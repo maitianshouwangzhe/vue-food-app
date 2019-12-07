@@ -4,12 +4,12 @@
       <div class="login_header">
         <h2 class="login_logo">外卖App</h2>
         <div class="login_header_title">
-          <a href="javascript:;" :class="{on: loginWay}" @click="loginWay=true">短信登录</a>   <!-- 点击时， 将loginWay设置为true   -->
-          <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay=false">密码登录</a>
+          <a href="javascript:;" :class="{on: loginWay}" @click=" loginWay = true">短信登录</a>   <!-- 点击时， 将loginWay设置为true   -->
+          <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay = false">密码登录</a>
         </div>
       </div>
       <div class="login_content">
-        <form>
+        <form @submit.prevent="login" >
           <div :class="{on: loginWay}">
             <section class="login_message">
               <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
@@ -24,7 +24,7 @@
               </button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码">
+              <input type="text" maxlength="6" placeholder="验证码" v-model="code">
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -34,17 +34,18 @@
           <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                <input type="text" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="密码">
-                <div class="switch_button off">
-                  <div class="switch_circle"></div>
-                  <span class="switch_text">...</span>
+                <input type="text" maxlength="8" placeholder="密码" v-if="isShowPassword" v-model="pwd">
+                <input type="password" maxlength="8" placeholder="密码" v-else v-model="pwd">
+                <div class="switch_button" :class=" isShowPassword ? 'on': 'off' " @click.prevent = "isShowPassword = !isShowPassword" >
+                  <div class="switch_circle" :class="{right: isShowPassword}"></div>
+                  <span class="switch_text">{{ isShowPassword ? 'abc' : '...' }}</span>
                 </div>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码">
+                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
                 <img class="get_verification" src="./images/captcha.svg" alt="captcha">
               </section>
             </section>
@@ -57,17 +58,36 @@
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
+
+    <!-- AlertTip中分发了一个事件，则在此处需要绑定监听    -->
+    <alert-tip :alertText="alertText" v-show="isShowAlertTip" @closeTip="closeTip"/>
   </section>
 </template>
 
 <script>
+  import AlertTip from '../../components/AlertTip/AlertTip'
   export default {
     data(){
       return {
+        // 登录方式，默认为手机登录
         loginWay: true,
         // 倒计时
         countDown: 0,
+        // 手机
         phone: '',
+        // 短信验证码
+        code: '',
+        // 密码
+        pwd: '',
+        name: '',
+        // 图形验证码
+        captcha: '',
+        // 是否显示密码
+        isShowPassword: false,
+        // alert的文本
+        alertText: '',
+        // 是否显示alert
+        isShowAlertTip: false,
       }
     },
 
@@ -94,9 +114,49 @@
             }
           }, 1000)
         }
-
-
       },
+
+      // (由于该方法多次使用)，则自定义一个方法
+      showAlert(alertText){
+        // 将alert设置为显示
+        this.isShowAlertTip = true
+        // alert要显示的内容
+        this.alertText = alertText
+        return
+      },
+
+      // 异步登录
+      login (){
+        // 手机号登录
+        if (this.loginWay){
+          // 取出表单输入的值
+          const {phone, code, rightPhone} = this
+          if (!rightPhone){
+            this.showAlert('手机号码不正确')
+          } else if (!/^\d{6}$/.test(code)){
+            this.showAlert( '短信验证码不正确, 验证必须是6位数字')
+          }
+        } else {
+          const {name, pwd, captcha} = this
+          if (!name){
+            this.showAlert('用户名必须输入')
+          } else if (!pwd){
+            this.showAlert('密码必须输入')
+          } else if (!captcha){
+            this.showAlert('验证码必须输入')
+          }
+        }
+      },
+
+      //
+      closeTip(){
+        this.isShowAlertTip = false
+        // 将提示内容清空，避免带来干扰
+        this.alertText = ''
+      },
+    },
+    components: {
+      AlertTip,
     }
   }
 </script>
@@ -203,6 +263,8 @@
                   background #fff
                   box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                   transition transform .3s
+                  &.right
+                    transform translateX(30px)
             .login_hint
               margin-top 12px
               color #999
