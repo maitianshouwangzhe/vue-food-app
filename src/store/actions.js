@@ -1,7 +1,8 @@
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
-  RECEIVE_SHOPS
+  RECEIVE_SHOPS,
+  RECEIVE_USER_INFO
 } from './mutations-types'
 
 import {
@@ -9,6 +10,8 @@ import {
   reqCategorys,
   reqShops
 } from '../api'
+
+
 
 
 // 注意：命名的技巧性。  如：
@@ -41,11 +44,19 @@ export default {
   },
 
   async getShops({commit, state}){
+    // 参数
     const {latitude, longitude} = state
     const result = await reqShops(longitude, latitude)   // 传递多个参数时， 参数的顺序很重要， 要根据接口请求函数的顺序，进行传参
     if (result.code === 0){
       const shops = result.data
       commit(RECEIVE_SHOPS, {shops})
     }
-  }
+  },
+
+
+  // 同步的action
+  // 以对象的形式commit
+  saveUser({commit}, userInfo){
+    commit(RECEIVE_USER_INFO, {userInfo})
+  },
 }

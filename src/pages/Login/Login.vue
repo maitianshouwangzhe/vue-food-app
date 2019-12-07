@@ -46,7 +46,12 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <img class="get_verification"
+                     src="http://localhost:4000/captcha"
+                     alt="captcha"
+                     @click="getCaptcha"
+                     ref="captcha"
+                >
               </section>
             </section>
           </div>
@@ -66,6 +71,7 @@
 
 <script>
   import AlertTip from '../../components/AlertTip/AlertTip'
+  import {reqSendCode,reqPhoneLogin, reqPwdLogin, reqLogout} from '../../api'
   export default {
     data(){
       return {
@@ -100,19 +106,32 @@
     },
 
     methods: {
-      getCode (){
+      async getCode (){
         // 如果当前没有倒计时， 才启动倒计时和 发请求 （注： 0对应为false ）。
         // this.countDown不为0时，即表明： 已经有了倒计时，若存在倒计时，不可再次点击
         if (!this.countDown){
           // 启动倒计时
           this.countDown = 30
-          const interValId = setInterval(()=>{
+          // 将计时器的id存到this中, 便于其它地方使用
+          this.interValId = setInterval(()=>{
             this.countDown--
             if (this.countDown <=0 ){
               // 停止计时
-              clearInterval(interValId)
+              clearInterval(this.interValId)
             }
           }, 1000)
+
+          // 循环定时器启动的同时，发起ajax请求，向指定手机发送验证码
+          const result = await reqSendCode(this.phone)
+          if (result.code === 1){
+            // 显示发送失败
+            this.showAlert(result.msg)
+            //  （如果计时器的值大于0） 清除倒计时
+            if (this.countDown){
+              this.countDown = 0
+              clearInterval(this.interValId)
+            }
+          }
         }
       },
 
@@ -126,7 +145,8 @@
       },
 
       // 异步登录
-      login (){
+      async login (){
+        let result
         // 手机号登录
         if (this.loginWay){
           // 取出表单输入的值
@@ -136,6 +156,10 @@
           } else if (!/^\d{6}$/.test(code)){
             this.showAlert( '短信验证码不正确, 验证必须是6位数字')
           }
+
+          //  使用手机号登录， 发送ajax请求
+          result = await reqPhoneLogin(phone, code)
+
         } else {
           const {name, pwd, captcha} = this
           if (!name){
@@ -145,6 +169,35 @@
           } else if (!captcha){
             this.showAlert('验证码必须输入')
           }
+
+          //  使用密码登录， 发送ajax请求
+          // 以对象的形式传入参数
+          result = await reqPwdLogin( {name, pwd, captcha} )
+        }
+
+        // 无论成功或者失败，都要清理定时器
+        // （如果计时器的值大于0） 清除倒计时
+        if (this.countDown){
+          this.countDown = 0
+          clearInterval(this.interValId)
+        }
+
+        // 统一处理请求的结果
+        if (result.code === 0){
+          const user = result.data
+          // 将user存储到vuex中，
+          await this.$store.dispatch('saveUser', user)
+          // 跳转至个人中心页面
+          await this.$router.replace('/profile')
+        } else {
+          // 更新图片验证码
+          this.getCaptcha()
+          // 清空输入的数据
+          this.captcha = ''
+          this.name = ''
+          this.pwd =''
+          // 登录失败
+          this.showAlert(result.msg)
         }
       },
 
@@ -153,6 +206,14 @@
         this.isShowAlertTip = false
         // 将提示内容清空，避免带来干扰
         this.alertText = ''
+      },
+
+      // 图形验证码是发送一般的请求，不是ajax请求，则这里不存在跨域
+      // 使用event，仅仅对当前使用，当其它地方调用该方法时，没有event，则使用ref
+      getCaptcha(event){
+        // 每次指定的src要不一样
+        // event.target.src = 'http://localhost:4000/captcha?time=' + Date.now()
+        this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
       },
     },
     components: {

@@ -21,10 +21,32 @@ export const reqAddress = (geohash) => ajax(BASE_URL + `/position/${geohash}`)
 // 请求食品分类列表
 export const reqCategorys = () => ajax(BASE_URL +'/index_category')
 
-//  根据经纬度获取商铺列表, 参数的顺序也很重要
-//  取名很重要
+//  根据经纬度获取商铺列表,
+//  参数的顺序很重要, 取名也很重要
 // export const reqShops = (aaa, bbb) => ajax('/shops', {longitude: aaa, latitude: bbb})
 export const reqShops = (longitude, latitude) => ajax(BASE_URL +'/shops', {longitude, latitude})
+
+// 根据经纬度和关键字搜索商铺列表
+export const reqSearchShops = (geohash, keyword) => ajax(BASE_URL + '/search_shops', {geohash, keyword})
+
+
+// 用户名密码登录
+// 当传入三个参数时，由于顺序不容记住，
+// 则使用对象的形式传参
+export const reqPwdLogin = ({name, pwd, captcha}) => ajax(BASE_URL + '/login_pwd', {name, pwd, captcha}, 'POST')
+
+// 发送短信验证码
+export const reqSendCode = (telephone) => ajax(BASE_URL + '/sendcode',{phone: telephone})
+
+// 手机号短信验证码登录
+export const reqPhoneLogin = (phone, code) => ajax(BASE_URL + '/login_sms',{phone, code}, 'POST')
+
+
+// 获取用户信息
+export const reqUserInfo = () => ajax(BASE_URL + '/userinfo')
+
+// 退出登录
+export const reqLogout = ()=> ajax(BASE_URL + '/logout' )
 
 
 
