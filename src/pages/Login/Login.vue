@@ -76,7 +76,7 @@
     data(){
       return {
         // 登录方式，默认为手机登录
-        loginWay: true,
+        loginWay: false,
         // 倒计时
         countDown: 0,
         // 手机
@@ -185,7 +185,7 @@
         // 统一处理请求的结果
         if (result.code === 0){
           const user = result.data
-          // 将user存储到vuex中，
+          // 将user存储到vuex中, 进行管理状态
           await this.$store.dispatch('saveUser', user)
           // 跳转至个人中心页面
           await this.$router.replace('/profile')

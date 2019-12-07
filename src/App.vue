@@ -16,11 +16,12 @@
       // 第一种：触发action调用，去更新状态
       // this.$store.dispatch('getAddress')
       this.getAddress()
+      this.getUserInfo()
     },
 
 
     methods: {
-      ...mapActions(['getAddress'])      // 相当于得到了 getAddress() 这个方法，
+      ...mapActions(['getAddress', 'getUserInfo'])      // 相当于得到了 getAddress() 这个方法，
     },
 
 

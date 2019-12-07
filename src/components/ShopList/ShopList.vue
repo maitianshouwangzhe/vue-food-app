@@ -2,7 +2,9 @@
   <div class="shop_container">
     <!-- shops有数据时， 才显示-->
     <ul class="shop_list" v-if="shops.length">
-      <li class="shop_li border-1px" v-for="(shop, index) in shops" :key="index">
+      <li class="shop_li border-1px" v-for="(shop, index) in shops"
+          :key="index" @click="$router.push('/shop')"
+      >
         <a>
           <div class="shop_left">
             <img class="shop_img" :src="baseUrl + shop.image_path">

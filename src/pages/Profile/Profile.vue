@@ -3,12 +3,12 @@
         <TopHeader title="我的账号"/>
         <section class="profile-number">
           <!--  路由连接， 点击即可实现路由跳转， 声明式路由  -->
-          <router-link to="/login" class="profile-link">
+          <router-link :to="userInfo._id ? '/userInfo' : '/login'" class="profile-link">
             <div class="profile_image">
               <i class="iconfont icon-person"></i>
             </div>
             <div class="user-info">
-              <!--  没有手机号，则表明是用户名登录；
+              <!--  没有手机号，则表明用户已登录；
                      有手机号，则隐藏
               -->
               <p class="user-info-top" v-if=" !userInfo.phone ">{{userInfo.name || '登录/注册'}}</p>
@@ -92,15 +92,34 @@
             </div>
           </a>
         </section>
+    <!-- 退出按钮    -->
+    <section class="profile_my_order border-1px">
+      <mt-button type="danger" style="width: 100%" v-show="userInfo._id" @click="logout">退出登录</mt-button>
+    </section>
   </section>
 </template>
 
 <script>
   import TopHeader from '../../components/TopHeader/TopHeader'
   import {mapState} from 'vuex'
+  import {MessageBox, Toast} from 'mint-ui'
   export default {
     computed: {
       ...mapState(['userInfo'])
+    },
+    methods: {
+      logout(){
+        MessageBox.confirm('确定退出么？').then(
+          action => {
+            // 触发退出登录的action
+            this.$store.dispatch('logout')
+            Toast('已退出登录')
+          },
+          action => {
+            console.log('已点击取消')
+          }
+        )
+      },
     },
     components: {
       TopHeader,

@@ -3,12 +3,17 @@
         <!-- 首页头部   -->
         <!-- 给定义的插槽传递标签数据  -->
         <TopHeader :title="address.name">
-          <span class="header_search" slot="left">
+          <router-link to="/search" class="header_search" slot="left">
             <i class="iconfont icon-sousuo"></i>
-          </span>
-          <span class="header_login" slot="right">
-            <span class="header_login_text">登录|注册</span>
-          </span>
+          </router-link>
+          <router-link :to=" userInfo._id ? '/userInfo': '/login' " class="header_login" slot="right">
+            <span class="header_login_text" v-if=" !userInfo">
+              登录|注册
+            </span>
+            <span class="header_login_text" v-else>
+              <i class="iconfont icon-person"/>
+            </span>
+          </router-link>
         </TopHeader>
 
         <!--首页导航-->
@@ -42,7 +47,7 @@
             <i class="iconfont icon-xuanxiang"></i>
             <span class="shop_header_title">附近商家</span>
           </div>
-
+          <!-- 抽取为一般组件   -->
           <ShopList/>
 
         </div>
@@ -66,8 +71,6 @@
 
     // 由于Swiper之前已经显示了，则在生命周期中创建最好
     mounted(){
-
-
       this.$store.dispatch('getCategorys')
       this.$store.dispatch('getShops')
     },
@@ -93,7 +96,7 @@
 
     computed: {
       //  读取 最新的状态
-      ...mapState(['address', 'categorys']),
+      ...mapState(['address', 'categorys', 'userInfo']),
 
       // 根据请求得到的一维数据categorys, 生成自己所需的二维数组categorysArr。 注,二维数组： [ [],  [], [], [], ... , [] ]
       // 内部小数组中的元素个数最大是8

@@ -10,3 +10,6 @@ export const RECEIVE_SHOPS = 'receive_shops'
 
 // 接收商家数组
 export const RECEIVE_USER_INFO = 'receive_user_info'
+
+// 退出登录清空用户
+export const CLEAR_USER_INFO = 'clear_user_info'
