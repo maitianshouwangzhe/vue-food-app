@@ -24,6 +24,12 @@
   import ShopRate from './ShopRate/ShopRate'
   import ShopInfo from './ShopInfo/ShopInfo'
   export default {
+
+    mounted(){
+      this.$store.dispatch('getShopInfo')
+      this.$store.dispatch('getShopRatings')
+    },
+
     components: {
       ShopHeader,
       ShopGoods,

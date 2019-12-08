@@ -66,7 +66,7 @@ export default new VueRoute({
             component: ShopGoods,
           },
           {
-            path: '/shop/rate',
+            path: '/shop/ratings',
             component: ShopRate,
           },
           {
@@ -74,8 +74,8 @@ export default new VueRoute({
             component: ShopInfo,
           },
           {
-            path: '',
-            redirect: '/shop/goods'
+            path: '/shop',
+            redirect: '/shop/goods',
           }
         ]
 

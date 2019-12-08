@@ -50,3 +50,18 @@ export const reqLogout = ()=> ajax(BASE_URL + '/logout' )
 
 
 
+
+/*
+* 商家的商品、评分、信息
+* 是本地mock数据，不存在跨域，则不需要配置代理
+*
+* */
+
+// 商家的商品
+export const reqGoods = () => ajax('/goods')
+
+// 商家的评分
+export const reqRatings = () => ajax('/ratings')
+
+// 商家的信息
+export const reqInfo = () => ajax('/info')

@@ -4,6 +4,9 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_USER_INFO,
   CLEAR_USER_INFO,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO,
 } from './mutations-types'
 
 import {
@@ -11,6 +14,9 @@ import {
   reqCategorys, reqLogout,
   reqShops,
   reqUserInfo,
+  reqGoods,
+  reqInfo,
+  reqRatings
 } from '../api'
 
 
@@ -46,7 +52,7 @@ export default {
   },
 
   async getShops({commit, state}){
-    // 参数
+    // 取出state的参数
     const {latitude, longitude} = state
     const result = await reqShops(longitude, latitude)   // 传递多个参数时， 参数的顺序很重要， 要根据接口请求函数的顺序，进行传参
     if (result.code === 0){
@@ -78,6 +84,30 @@ export default {
     const result = await reqLogout()
     if (result.code === 0){
       commit(CLEAR_USER_INFO)
+    }
+  },
+
+  async getShopGoods({commit}){
+    const result = await reqGoods()
+    if (result.code === 0){
+      const goods = result.data
+      commit(RECEIVE_GOODS, {goods})
+    }
+  },
+
+  async getShopRatings({commit}){
+    const result = await reqRatings()
+    if (result.code === 0){
+      const ratings = result.data
+      commit(RECEIVE_RATINGS, {ratings})
+    }
+  },
+
+  async getShopInfo({commit}){
+    const result = await reqInfo()
+    if (result.code === 0){
+      const info = result.data
+      commit(RECEIVE_INFO, {info})
     }
   },
 }

@@ -11,6 +11,10 @@ export default {
   longitude: 116.36867, // 经度
   address: {}, //地址相关信息对象
   categorys: [], // 食品分类数组
-  shops: [], // 商家数组
+  shops: [], // 包含所有商家的数组
   userInfo: {},  // 当前登录的用户信息
+  goods: [],     // 某个商家的商品
+  ratings: [],   // 某个商家的评分
+  info: {}      // 某个商家的信息
+
 }

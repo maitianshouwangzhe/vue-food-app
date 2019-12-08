@@ -1,11 +1,12 @@
 <template>
     <div>
-      商品评分
+      评分
     </div>
 </template>
 
 <script>
-  export default {}
+  export default {
+  }
 </script>
 
 

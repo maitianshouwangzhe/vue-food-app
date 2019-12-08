@@ -13,3 +13,13 @@ export const RECEIVE_USER_INFO = 'receive_user_info'
 
 // 退出登录清空用户
 export const CLEAR_USER_INFO = 'clear_user_info'
+
+// 某个商家的信息
+export const RECEIVE_INFO = 'receive_info'
+
+// 某个商家的商品
+export const RECEIVE_GOODS = 'receive_goods'
+
+// 某个商家的评价
+export const RECEIVE_RATINGS = 'receive_ratings'
+

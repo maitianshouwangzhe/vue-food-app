@@ -15,7 +15,7 @@
     "better-scroll": "^1.11.1",
     "date-fns": "^1.29.0",
     "mint-ui": "^2.2.13",
-    "mockjs": "^1.0.1-beta3",
+    "mockjs": "^1.1.0",
     "moment": "^2.22.1",
     "swiper": "^4.2.6",
     "vue": "^2.5.2",

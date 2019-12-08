@@ -3,7 +3,7 @@
         <TopHeader title="我的账号"/>
         <section class="profile-number">
           <!--  路由连接， 点击即可实现路由跳转， 声明式路由  -->
-          <router-link :to="userInfo._id ? '/userInfo' : '/login'" class="profile-link">
+          <router-link :to=" userInfo._id ? '/userInfo' : '/login' " class="profile-link">
             <div class="profile_image">
               <i class="iconfont icon-person"></i>
             </div>
