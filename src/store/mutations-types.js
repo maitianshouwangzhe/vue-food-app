@@ -23,3 +23,8 @@ export const RECEIVE_GOODS = 'receive_goods'
 // 某个商家的评价
 export const RECEIVE_RATINGS = 'receive_ratings'
 
+// 增加购买某食物的数量时
+export const INCREMENT_FOOD_COUNT = 'increment_food_count'
+
+// 减少购买某食物的数量时
+export const DECREMENT_FOOD_COUNT = 'decrement_food_count'

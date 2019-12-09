@@ -1,6 +1,6 @@
 <template>
     <div>
-      信息
+      商家信息
     </div>
 </template>
 

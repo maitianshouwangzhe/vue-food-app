@@ -1,6 +1,8 @@
 <template>
     <div>
+      <!--  头部组件   -->
       <ShopHeader/>
+
       <div class="tab">
         <div class="tab-item">
           <router-link to="/shop/goods">点餐</router-link>

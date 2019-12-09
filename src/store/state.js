@@ -15,6 +15,7 @@ export default {
   userInfo: {},  // 当前登录的用户信息
   goods: [],     // 某个商家的商品
   ratings: [],   // 某个商家的评分
-  info: {}      // 某个商家的信息
-
+  info: {},       // 某个商家的信息
+  // 购物车中食物列表
+  cardFoods: [],
 }
