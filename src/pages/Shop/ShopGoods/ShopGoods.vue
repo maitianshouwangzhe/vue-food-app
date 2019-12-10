@@ -2,7 +2,7 @@
   <div>
     <div class="goods">
 
-      <!--   左侧导航栏  -->
+      <!--   左侧的导航栏  -->
       <div class="menu-wrapper">
         <ul >
           <!-- 动态class的current表示当前选中   -->
@@ -22,7 +22,7 @@
       </div>
 
       <!-- 右侧的商品详情   -->
-      <div class="foods-wrapper" v-if="goods.length">   <!-- 数组goods的长度为0时， 不显示右侧商品 -->
+      <div class="foods-wrapper" v-if="goods.length">   <!--  数组goods的长度为0时， 不显示右侧商品 -->
         <!--  定义一个唯一标识，便于快速查找  -->
         <ul ref="foodsUI">
           <!-- 双重v-for循环语句 -->
@@ -80,9 +80,8 @@
   export default {
     data(){
       return {
-        scrollY: 0, // 右侧滑动时Y轴坐标 (滑动过程时实时变化)
-        tops: [],  // 所有右侧分类li的top组成的数组  (列表第一次显示后就不再变化)
-
+        scrollY: 0,  // 右侧滑动时Y轴坐标 (滑动过程时实时变化)
+        tops: [],   // 由所有分类下商品li组成的数组tops  (列表第一次显示后就不再变化)
         food: {},  // 点击需要显示的food的Modal框
       }
     },
@@ -109,7 +108,8 @@
     },
 
     mounted () {
-      // 传递一个回调函数， 只有数据更新后才能执行
+      // 分发action， 并将回调函数作为参数，传递过去
+      // 只有数据更新后，才在action中执行该回调函数
       this.$store.dispatch('getShopGoods', () => {
         this.$nextTick( () => {
           // 写成一个方法， 抽离出去

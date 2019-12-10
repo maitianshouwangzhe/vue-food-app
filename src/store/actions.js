@@ -123,4 +123,9 @@ export default {
       commit(RECEIVE_INFO, {info})
     }
   },
+
+  // 同步清空购物车
+  clearShopCart({commit}){
+    commit('CLEARSHOPCART')
+  }
 }

@@ -4,61 +4,160 @@
 
       <!-- 购物车 -->
       <div class="content">
-        <div class="content-left">
+        <div class="content-left" @click="toggleShow">
           <div class="logo-wrapper">
-            <div class="logo" :class=" {highlight: totalCount} ">
-              <i class="iconfont icon-shopping_cart" :class=" {highlight: totalCount} "></i>
+            <div class="logo" :class="{highlight: totalCount > 0}">
+              <i class="iconfont icon-shopping_cart" :class="{highlight: totalCount} "/>
             </div>
-            <div class="num" v-if="totalCount"> {{ totalCount }} </div>
+            <div class="num" v-if="totalCount > 0"> {{totalCount}} </div>
           </div>
           <div class="price" :class="{highlight: totalCount}">￥{{totalPrice}}</div>
           <div class="desc">另需配送费￥{{info.deliveryPrice}} 元</div>
         </div>
         <div class="content-right">
-          <!--  文本有三种状态 TODO  -->
-          <div class="pay not-enough">
-            还差￥10元起送
+          <!--  类名支付pay有三种状态， 设计一个计算属性 -->
+          <div class="pay" :class="payClass" @click="toPay">
+            {{payText}}
           </div>
         </div>
       </div>
 
       <!--  购物车列表 -->
-      <div class="shopcart-list" style="display: none;">
+      <div class="shopcart-list" v-show="listShow">
         <div class="list-header">
-          <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
+          <h1 class="title">已点食物</h1>
+          <span class="empty" @click="clearCart">清空</span>
         </div>
         <div class="list-content">
           <ul>
-            <li class="food">
-              <span class="name">红枣山药糙米粥</span>
-              <div class="price"><span>￥10</span></div>
+            <li class="food" v-for="(food, index) in cardFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price"><span>￥{{food.price}}</span></div>
               <div class="cartcontrol-wrapper">
-                <div class="cartcontrol">
-                  <div class="iconfont icon-remove_circle_outline"></div>
-                  <div class="cart-count">1</div>
-                  <div class="iconfont icon-add_circle"></div>
-                </div>
+                <CartControl :food="food"/>
               </div>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="list-mask" style="display: none;"></div>
+
+    <transition name="move">
+      <!--  遮罩  -->
+      <div class="list-mask" v-show="listShow" @click="toggleShow"/>
+    </transition>
+
   </div>
 </template>
 
 <script>
   import {mapState, mapGetters} from 'vuex'
+  import BScroll from 'better-scroll'
+  import {MessageBox} from 'mint-ui'
+  import CartControl from '../CartControl/CartControl'
   export default {
+    data(){
+      return {
+        isShow: false,
+      }
+    },
+
+    // 分析购物车组件所需的状态：购物车的食物列表，
     computed: {
       // 设计一个状态，cardFoods在vuex里面管理
-      // 购物车里面的食物
+      // cardFoods表示为：购物车中的食物列表
       ...mapState(['cardFoods', 'info']),
-      // 都与cardFoods有关，则使用计算属性
+      // 与cardFoods有关，则使用计算属性
       ...mapGetters(['totalPrice', 'totalCount']),
+
+      payClass(){
+        const {totalPrice} = this
+        const {minPrice} = this.info
+        // 返回值为动态的class
+        return totalPrice >= minPrice ? 'enough' : 'not-enough'
+      },
+
+      payText(){
+        const {totalPrice} = this
+        const {minPrice} = this.info
+        if (totalPrice === 0){
+          return `满￥${minPrice}元起送`
+        }
+        if (totalPrice >= minPrice){
+          return '去结算'
+        } else {
+          return `还差￥${minPrice-totalPrice}元起送`
+        }
+      },
+
+      listShow(){
+        // 如果食物数量为0，直接不显示
+        if(this.totalCount === 0){
+          // 避免清空购物车之后，状态仍然存在
+          this.isShow = false
+          return false
+        }
+
+        // 当列表显示的时候，才能创建BScroll实例， 且只能创建一个实例对象
+        if (this.isShow){
+          this.$nextTick( () => {
+            // 如果不存在实例，则创建实例，避免多次创建，使得购物车中商品的数量出现bug。
+            // 实现BScroll的实例对象为单例
+            if (!this.scroll){
+              this.scroll = new BScroll('.list-content', {
+                click: true
+              })
+            } else {
+              // 存在实例后，让滚动条刷新一下，重新统计列表的高度
+              this.scroll.refresh()
+            }
+          })
+        }
+
+        return this.isShow
+      },
+    },
+
+    methods:{
+
+      toggleShow(){
+        // 只有总数量大于0时，才切换
+        if (this.totalCount>0){
+          this.isShow = !this.isShow
+        }
+      },
+
+      clearCart(){
+        MessageBox.confirm('你确定清空购物车吗？').then(
+          action => {
+            this.$store.dispatch('clearShopCart')
+          },
+          () => {
+             //  点击取消的回调
+          }
+        )},
+
+      // 去支付结算
+      toPay(){
+        // 如果可以结算
+        if (this.payClass === 'enough'){
+          MessageBox.confirm('你确定支付吗？').then(
+            action => {
+              alert('支付成功')
+            },
+            () => {
+              //  点击取消的回调
+            }
+          )
+        }
+      }
+    },
+
+    components: {
+      CartControl
     }
+
+
   }
 </script>
 
@@ -172,11 +271,11 @@
       top 0
       z-index -1
       width 100%
-      transform translateY(-100%)
+      transform translateY(-100%)  // 显示时，将列表往上移
       &.move-enter-active, &.move-leave-active
         transition transform .3s
       &.move-enter, &.move-leave-to
-        transform translateY(0)
+        transform translateY(0)    // 隐藏时，将列表往下移
       .list-header
         height 40px
         line-height 40px

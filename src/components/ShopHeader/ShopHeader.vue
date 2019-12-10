@@ -32,6 +32,7 @@
     </div>
 
 
+    <!--  点餐上面的缩略优惠活动   -->
     <div class="shop-header-discounts" v-if="info.supports" @click="isShowSupports = !isShowSupports">
       <div class="discounts-left">
         <div class="activity" :class="supportClasses[info.supports[0].type]">
@@ -121,7 +122,7 @@
   export default {
     data(){
       return {
-        // 首单或折扣底色样式
+        // 首单 或 折扣 底色的样式
         supportClasses: ['activity-green', 'activity-red', 'activity-orange'],
         isShowSupports: false,
         isShowShop: false,

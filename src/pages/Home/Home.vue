@@ -69,7 +69,6 @@
       }
     },
 
-    // 由于Swiper之前已经显示了，则在生命周期中创建最好
     mounted(){
       this.$store.dispatch('getCategorys')
       this.$store.dispatch('getShops')

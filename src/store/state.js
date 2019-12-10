@@ -16,6 +16,6 @@ export default {
   goods: [],     // 某个商家的商品
   ratings: [],   // 某个商家的评分
   info: {},       // 某个商家的信息
-  // 购物车中食物列表
+  // 购物车中食物的列表
   cardFoods: [],
 }
