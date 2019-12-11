@@ -98,6 +98,7 @@
           return false
         }
 
+        // 这里的数量会不断发生变化，避免数量的bug，只能创建一个BScroll对象
         // 当列表显示的时候，才能创建BScroll实例， 且只能创建一个实例对象
         if (this.isShow){
           this.$nextTick( () => {
