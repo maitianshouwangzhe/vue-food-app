@@ -91,6 +91,11 @@ export default {
     state.cardFoods = []
   },
 
+  // 搜索得到的商家列表
+  receive_searchShops(state, {searchShops} ){
+    state.searchShops = searchShops
+  },
+
 
 
 }

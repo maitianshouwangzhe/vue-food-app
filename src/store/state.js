@@ -18,4 +18,6 @@ export default {
   info: {},       // 某个商家的信息
   // 购物车中食物的列表
   cardFoods: [],
+  // 搜索得到的商家列表
+  searchShops: [],
 }

@@ -18,7 +18,7 @@ import {
   reqUserInfo,
   reqGoods,
   reqInfo,
-  reqRatings
+  reqRatings, reqSearchShops
 } from '../api'
 
 
@@ -128,5 +128,17 @@ export default {
   // 同步清空购物车
   clearShopCart({commit}){
     commit('CLEARSHOPCART')
+  },
+
+  // 搜索商家得到的列表
+  async getSearchShops ({commit, state}, keyword, callback) {
+    // 取出发请求的参数
+    const geohash = state.latitude + ',' + state.longitude
+    const result = await reqSearchShops(geohash, keyword)
+    if (result.code === 0){
+      const searchShops = result.data
+      commit('receive_searchShops', {searchShops})
+      callback && callback()
+    }
   }
 }

@@ -81,6 +81,7 @@
     },
 
     mounted () {
+      // 由于数据是异步得到的，因此数据是在mouted之后
       // 如果还没有数据, 直接结束,（在当前路由页面刷新）
       if (!this.info.pics){
         return
@@ -108,7 +109,9 @@
 
     watch: {
       info(){
-        this.$nextTick( () => {  // 刷新流程--> 更新数据
+        // categorys数组中有数据了，但是界面显示是异步显示的。
+        // 因此，只有在界面更新后，立即创建Swiper实例。使用this.$nextTick
+        this.$nextTick( () => {  // 该路由组件刷新流程--> 更新数据
           this._initScroll()
         })
       }

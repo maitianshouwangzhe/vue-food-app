@@ -26,8 +26,7 @@ export const reqCategorys = () => ajax(BASE_URL +'/index_category')
 // export const reqShops = (aaa, bbb) => ajax('/shops', {longitude: aaa, latitude: bbb})
 export const reqShops = (longitude, latitude) => ajax(BASE_URL +'/shops', {longitude, latitude})
 
-// 根据经纬度和关键字搜索商铺列表
-export const reqSearchShops = (geohash, keyword) => ajax(BASE_URL + '/search_shops', {geohash, keyword})
+
 
 
 // 用户名密码登录
@@ -64,3 +63,7 @@ export const reqRatings = () => ajax('/ratings')
 
 // 商家的信息
 export const reqInfo = () => ajax('/info')
+
+
+// 根据经纬度和关键字搜索商铺列表
+export const reqSearchShops = (geohash, keyword) => ajax(BASE_URL + '/search_shops', {geohash, keyword})
