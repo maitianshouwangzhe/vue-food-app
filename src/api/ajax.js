@@ -26,8 +26,7 @@ export default function ajax(url, data={}, type = 'GET') {
     promise.then(response => {
       // 正确的请求
       resolve(response.data)
-    })
-      .catch(error => {
+    }).catch(error => {
         // 失败的请求
         reject(error)
       })
