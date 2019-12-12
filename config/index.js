@@ -10,7 +10,8 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // 配置代理， 避免跨域
+
+    // 配置代理， 解决跨域问题
     proxyTable: {
       '/api': {  // 匹配所有以 '/api'开头的请求路径
         target: 'http://localhost:4000',   // 代理目标的基础路径

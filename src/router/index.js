@@ -2,10 +2,21 @@
 
 import Vue from 'vue'
 import VueRoute from 'vue-router'
+/*
+
 import Home from '../pages/Home/Home'
 import Search from '../pages/Search/Search'
 import Order from '../pages/Order/Order'
 import Profile from '../pages/Profile/Profile'
+
+*/
+// 路由组件懒加载
+const Home = () => import('../pages/Home/Home')
+const Search = () => import('../pages/Search/Search')
+const Order = () => import('../pages/Order/Order')
+const Profile = () => import('../pages/Profile/Profile')
+
+
 import Login from '../pages/Login/Login'
 import Shop from '../pages/Shop/Shop'
 import ShopGoods from '../pages/Shop/ShopGoods/ShopGoods'
@@ -26,8 +37,8 @@ export default new VueRoute({
         },
         {
             path: '/home',
-            component: Home,
-            // 配置仅仅某些路由显示底部的页脚
+            component: Home,    // 返回路由组件的函数， 只有执行该函数（即请求对应的路由路径时），才会加载路由。
+            // 配置仅某些路由显示底部的页脚
             meta: {
             showFooter: true
             }

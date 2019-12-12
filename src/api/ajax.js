@@ -4,7 +4,7 @@
 * */
 import axios from 'axios'
 
-// 以对象的形式，传过来请求参数
+// 请求参数：以对象的形式，则为query参数
 export default function ajax(url, data={}, type = 'GET') {
   return new Promise((resolve, reject) => {
     let promise
