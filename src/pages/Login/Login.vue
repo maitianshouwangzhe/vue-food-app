@@ -107,8 +107,8 @@
 
     methods: {
       async getCode (){
-        // 如果当前没有倒计时， 才启动倒计时和 发请求 （注： 0对应为false ）。
-        // this.countDown不为0时，即表明： 已经有了倒计时，若存在倒计时，不可再次点击
+        // 如果当前倒计时为0， 才启动倒计时和 发请求获得验证码 （注： 0对应为false ）。
+        // 即：this.countDown不为0时，即表明： 已经有了倒计时，若存在倒计时，不可再次点击发送请求获得验证码。（进入了else语句）
         if (!this.countDown){
           // 启动倒计时
           this.countDown = 30
